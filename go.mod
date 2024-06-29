@@ -1,4 +1,4 @@
-module github.com/demarijm/hotel-api
+module github.com/demarijm/hotel-reservation
 
 go 1.21.5
 
