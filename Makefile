@@ -12,6 +12,8 @@ build:
 	$(GOBUILD) -o $(BINARY_NAME) -v
 test:
 	$(GOTEST) -v ./...
+seed:
+	@go run scripts/seed.go
 clean:
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)
