@@ -19,6 +19,12 @@ import (
 
 const dburi = "mongodb://localhost:27017"
 
+var config = fiber.Config{
+	ErrorHandler: func(c *fiber.Ctx, err error) error {
+		return c.JSON(map[string]string{"error": err.Error()})
+	},
+}
+
 // @title Hotel Reservation API
 // @version 1.0
 // @description This is a sample swagger for Fiber
@@ -42,7 +48,7 @@ func main() {
 	// handlers init
 	userHandler := api.NewUserHandler(db.NewMongoUserStore(client))
 
-	app := fiber.New()
+	app := fiber.New(config)
 	apiv1 := app.Group("/api/v1")
 
 	app.Get("/swagger/*", swagger.HandlerDefault) // default
@@ -61,8 +67,11 @@ func main() {
 		// OAuth2RedirectUrl: "http://localhost:5001/swagger/oauth2-redirect.html",
 	}))
 
-	apiv1.Get("/user", userHandler.HandleGetUser)
+	apiv1.Get("/user", userHandler.HandleGetUsers)
 	apiv1.Get("/user/:id", userHandler.HandleGetUser)
+	apiv1.Delete("/user/:id", userHandler.HandleDeleteUser)
+	apiv1.Post("/user", userHandler.HandlePostUser)
+	apiv1.Put("/user/:id", userHandler.HandlePutUser)
 
 	log.Fatal(app.Listen(*port))
 }
